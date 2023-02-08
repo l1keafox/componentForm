@@ -1,36 +1,38 @@
 <template>
   <div>
     <h1>Create an event</h1>
-    <form>
+    <form @submit.prevent="sendForm">
       <BaseSelect
       :options="categories"
       v-model="event.category"
       labbel="select a catagory"
       />
-      <h3>Name & describe your event</h3>
+      <fieldset>
+      <legend>Name & describe your event</legend>
       <BaseInput
         v-model="event.title"
         label="Title"
         type="text"
+        error="This input has an error!"
       />
-      <label>Description</label>
-
       <BaseInput
         v-model="event.description"
         label="Description"
         type="text"
       />
+    </fieldset>
+  <fieldset>
+    <legend>Where is your event?</legend>
+    <BaseInput
+    v-model="event.location"
+    label="Location"
+    type="text"
+    />
 
-      <h3>Where is your event?</h3>
-      <BaseInput
-      v-model="event.location"
-      label="Location"
-      type="text"
-      />
-      <hr/>
-      {{ event }}
-
-      <h3>Are pets allowed?</h3>
+  </fieldset>
+  <fieldset>
+      <legend>Pets</legend>
+      <p> Are pets allowed? </p>
       <div>
         <BaseRadioGroup
           v-model="event.pets"
@@ -38,8 +40,10 @@
           :options = "petOptions"
         />
       </div>
+    </fieldset>
+    <fieldset>
 
-      <h3>Extras</h3>
+      <legend>Extras</legend>
       <div>
         <BaseCheckbox
           label="Catering"
@@ -52,6 +56,7 @@
           v-model="event.extras.music"
         />
       </div>
+    </fieldset>
 
       <button class="button -fill-gradient" type="submit">Submit</button>
     </form>
@@ -59,8 +64,23 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
+  methods: {
+    sendForm () {
+      axios.post(
+        'https://my-json-server.typicode.com/Code-Pop/Vue-3-Forms/events',
+        this.event
+      )
+        .then(function (rpnse) {
+          console.log('rpnse', rpnse)
+        })
+        .catch((err) => {
+          console.log('Error', err)
+        })
+    }
+  },
   data () {
     return {
       categories: [
@@ -91,3 +111,17 @@ export default {
   }
 }
 </script>
+<style>
+fieldset{
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  font-size:28px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+
+</style>
